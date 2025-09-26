@@ -116,6 +116,7 @@ class RemoveMetadaForm(ttk.Frame):
             .replace(";", ",")
             .split(",")
         )
+        other_tags = [tag for tag in other_tags if tag]
         tags.extend(other_tags)
 
         return tags
