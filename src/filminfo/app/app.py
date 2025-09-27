@@ -70,7 +70,7 @@ class App(ttk.Frame):
         )
 
         self.columnconfigure(0, weight=1, minsize=500)
-        self.columnconfigure(1, weight=0, minsize=500)
+        self.columnconfigure(1, weight=0, minsize=530)
         self.rowconfigure(0, weight=1)
 
     def __configure(self) -> None:

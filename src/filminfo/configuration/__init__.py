@@ -8,7 +8,6 @@ from platformdirs import user_config_dir
 
 from filminfo.models.validators import database_valid, file_readable, file_writeable
 
-
 __ALL__ = [
     "APP_NAME",
     "CONFIG_NAME",
@@ -48,7 +47,7 @@ _DEFAULT_CONFIG: dict[str, ConfigOption] = {
     "author": None,
     "country": None,
     "exiftool": "exiftool",
-    "thumbnail_size": 120,
+    "thumbnail_size": 150,
     "thumbnail_highlight_color": "#2b90fd",
     "preview_size": 900,
     "error_text_color": "#e63946",

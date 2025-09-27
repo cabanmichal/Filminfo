@@ -68,15 +68,13 @@ class Gallery(ttk.Frame):
         self._toolbar.button_pattern_apply.configure(command=self._on_pattern_apply)
         self._toolbar.entry_pattern.bind("<Return>", self._on_pattern_apply)
 
-    def _draw_thumbnails(self, sort: bool = False) -> None:
+    def _draw_thumbnails(self, columns: int, sort: bool = False) -> None:
         if not self._thumbnails:
             return
 
         for thumbnail in self._thumbnails:
-            thumbnail.grid_forget()
+            thumbnail.grid_remove()
 
-        self.update_idletasks()
-        columns = self._get_number_of_columns()
         thumbnails = (
             sorted(self._thumbnails, key=lambda t: t.file_path)
             if sort
@@ -91,6 +89,7 @@ class Gallery(ttk.Frame):
                 pady=PADDING_SMALL,
                 sticky="n",
             )
+        self._columns = columns
 
     def _load_thumbnails(self, images: Iterable[str]) -> None:
         thumbnails = []
@@ -125,6 +124,7 @@ class Gallery(ttk.Frame):
         )
 
     def _get_number_of_columns(self) -> int:
+        self.update_idletasks()
         thumbnail_width = self._get_thumbnail_size()
         if thumbnail_width:
             columns = max(
@@ -160,7 +160,7 @@ class Gallery(ttk.Frame):
         images = self._get_images()
         if images:
             self._load_thumbnails(images)
-            self._draw_thumbnails()
+            self._draw_thumbnails(self._get_number_of_columns())
         self._update_status_bar()
         self.focus_set()
 
@@ -173,7 +173,7 @@ class Gallery(ttk.Frame):
         for thumbnail in selected:
             thumbnail.destroy()
 
-        self._draw_thumbnails()
+        self._draw_thumbnails(self._get_number_of_columns())
         self._update_status_bar()
         self.focus_set()
 
@@ -193,9 +193,8 @@ class Gallery(ttk.Frame):
         self._update_status_bar()
 
     def _on_resize(self, event: tk.Event) -> None:
-        if columns := self._get_number_of_columns() != self._columns:
-            self._draw_thumbnails()
-            self._columns = columns
+        if (columns := self._get_number_of_columns()) != self._columns:
+            self._draw_thumbnails(columns)
         self.focus_set()
 
     def _on_pattern_apply(self, event: tk.Event | None = None) -> None:
@@ -219,12 +218,6 @@ class Gallery(ttk.Frame):
             if pattern.search(thumbnail.file_path):
                 thumbnail.select()
         self._update_status_bar()
-
-    def _on_sort_by_path(self, event: tk.Event | None = None) -> None:
-        self._draw_thumbnails(sort=True)
-
-    def _on_sort_by_time_added(self, event: tk.Event | None = None) -> None:
-        self._draw_thumbnails(sort=False)
 
     def deselect_all(self) -> None:
         for thumbnail in self._thumbnails:
