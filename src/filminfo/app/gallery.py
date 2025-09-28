@@ -53,11 +53,12 @@ class Gallery(ttk.Frame):
             add_bindtag(widget, Gallery.TAG)
 
         control_key = "Command" if platform.system() == "Darwin" else "Control"
+        delete_key = "BackSpace" if platform.system() == "Darwin" else "Delete"
         self.bind("<Configure>", self._on_resize)
         self.bind("<Escape>", self._on_deselect_all)
         self.bind(f"<{control_key}-a>", self._on_select_all)
         self.bind("<Key-*>", self._on_invert_selection)
-        self.bind("<Delete>", self._on_remove_images)
+        self.bind(f"<{delete_key}>", self._on_remove_images)
         self.bind_all(f"<{control_key}-o>", self._on_add_images)
 
         self.bind_class(Gallery.TAG, "<Button-1>", self._on_gallery_click, add="+")
@@ -200,6 +201,7 @@ class Gallery(ttk.Frame):
     def _on_pattern_apply(self, event: tk.Event | None = None) -> None:
         self._scrollable.scroll_to_top()
         self._scrollable.scroll_to_left()
+        self.focus_set()
 
         text = self._toolbar.pattern
         if not text:
