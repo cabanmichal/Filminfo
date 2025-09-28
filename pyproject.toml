@@ -1,6 +1,6 @@
 [project]
 name = "filminfo"
-version = "0.1.0"
+version = "0.1.1"
 description = "Exiftool frontend to add basic information to film scans."
 authors = [
     { name = "Michal Caban", email = "" }
