@@ -220,7 +220,7 @@ class MetadataView(ttk.Frame):
             for key, value in file_data.items():
                 group, *tag = key.split(":", maxsplit=1)
                 child = self._tree.insert(
-                    parent, "end", values=(group, tag, value.replace("\n", " | "))
+                    parent, "end", values=(group, tag, str(value).replace("\n", " | "))
                 )
                 self._tree_items.append((child, parent))
                 total_items += 1
