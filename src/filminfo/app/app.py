@@ -15,7 +15,7 @@ from filminfo.configuration import (
     APP_NAME,
     DEFAULT_WIN_SIZE,
     MIN_WIN_SIZE,
-    PADDING_MEDIUM,
+    PADDING_BIG,
     ensure_database,
     get_app_dir,
     get_exiftool,
@@ -59,14 +59,14 @@ class App(ttk.Frame):
         self.__configure()
 
     def _layout(self) -> None:
-        self._gallery.grid(row=0, column=0, sticky="nsew")
+        self._gallery.grid(row=0, column=0, sticky="nsew", padx=(PADDING_BIG, 0))
         self._notebook.grid(row=0, column=1, sticky="nsew")
         self._separator.grid(row=1, column=0, columnspan=2, sticky="we")
         self._button_open_dir.grid(
-            row=2, column=0, sticky="w", padx=PADDING_MEDIUM, pady=PADDING_MEDIUM
+            row=2, column=0, sticky="w", padx=PADDING_BIG, pady=PADDING_BIG
         )
         self._button_execute.grid(
-            row=2, column=1, sticky="e", padx=PADDING_MEDIUM, pady=PADDING_MEDIUM
+            row=2, column=1, sticky="e", padx=PADDING_BIG, pady=PADDING_BIG
         )
 
         self.columnconfigure(0, weight=1, minsize=500)
@@ -201,7 +201,7 @@ def main():
         database_controller=database_controller,
         exiftool_controller=ExifToolController(get_exiftool()),
     )
-    app.grid(row=0, column=0, sticky="nsew", padx=PADDING_MEDIUM, pady=PADDING_MEDIUM)
+    app.grid(row=0, column=0, sticky="nsew")
 
     root.columnconfigure(0, weight=1)
     root.rowconfigure(0, weight=1)
