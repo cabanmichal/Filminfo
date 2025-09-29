@@ -57,7 +57,7 @@ class Gallery(ttk.Frame):
         self.bind("<Configure>", self._on_resize)
         self.bind("<Escape>", self._on_deselect_all)
         self.bind(f"<{control_key}-a>", self._on_select_all)
-        self.bind("<Key-*>", self._on_invert_selection)
+        self.bind("<asterisk>", self._on_invert_selection)
         self.bind(f"<{delete_key}>", self._on_remove_images)
         self.bind_all(f"<{control_key}-o>", self._on_add_images)
 

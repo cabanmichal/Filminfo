@@ -18,7 +18,7 @@ Simple gui to add basic metadata to film scans.
 -   `<Command-a>`/`<Control-a>` selects all images.
 -   You can also select images using regular expression or clicking on the thumbnails.
 -   `<Escape>` deselects all images.
--   `<Key-*>` inverts the selection.
+-   `<asterisk>` inverts the selection.
 -   `<Delete>` removes selected images.
 -   Metadata are written to selected images by pressing the `[Execute]` button.
 
