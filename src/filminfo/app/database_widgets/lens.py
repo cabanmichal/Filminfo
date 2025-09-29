@@ -5,7 +5,7 @@ from filminfo.app.combobox import ShiftScrollCombobox
 from filminfo.app.database_widgets import save_database
 from filminfo.app.types import AnyWidget
 from filminfo.app.validating_entry import ValidatingEntry
-from filminfo.configuration import PADDING_SMALL
+from filminfo.configuration import PADDING_MEDIUM, PADDING_SMALL
 from filminfo.controllers.database_controller import DatabaseController
 from filminfo.models.entities import Lens
 from filminfo.models.validators import focal_length_valid
@@ -67,7 +67,7 @@ class LensWidget(ttk.LabelFrame):
         # --- Lens selection ---
         self._label_lens.grid(row=0, column=0, sticky="w")
         self._combo_lens.grid(row=0, column=1, sticky="ew")
-        self._button_remove.grid(row=0, column=2, padx=PADDING_SMALL)
+        self._button_remove.grid(row=0, column=2)
 
         # --- Make ---
         self._label_make.grid(row=1, column=0, sticky="w")
@@ -86,10 +86,13 @@ class LensWidget(ttk.LabelFrame):
         self._entry_serial.grid(row=4, column=1, columnspan=2, sticky="ew")
 
         # --- buttons ---
-        self._button_clear.grid(row=5, column=0, sticky="w", padx=PADDING_SMALL)
-        self._button_add.grid(row=5, column=2, sticky="e", padx=PADDING_SMALL)
+        self._button_clear.grid(row=5, column=0, sticky="w")
+        self._button_add.grid(row=5, column=2, sticky="e")
 
         self.columnconfigure(1, weight=1)
+
+        for widget in self.winfo_children():
+            widget.grid_configure(padx=PADDING_MEDIUM, pady=PADDING_SMALL)
 
     def _make_lens_name(self, lens: Lens) -> str:
         parts = [lens.make, lens.model]

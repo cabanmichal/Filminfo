@@ -58,15 +58,24 @@ class MetadataView(ttk.Frame):
 
     def _layout(self) -> None:
         self._label_data.grid(row=0, column=0, sticky="w")
-        self._button_expand.grid(row=1, column=0, sticky="w", padx=(0, PADDING_SMALL))
-        self._button_collapse.grid(row=1, column=1, sticky="w", padx=PADDING_SMALL)
-        self._button_clone.grid(row=1, column=6, sticky="e", padx=(PADDING_SMALL, 0))
+        self._button_expand.grid(row=1, column=0, sticky="w")
+        self._button_collapse.grid(row=1, column=1, sticky="w")
+        self._button_clone.grid(row=1, column=6, sticky="e")
 
         self._scrollable.grid(row=2, column=0, sticky="nsew", columnspan=7)
         self._tree.grid(row=0, column=0)
 
         self.columnconfigure(2, weight=1)
         self.rowconfigure(2, weight=1)
+
+        for widget in [
+            self._label_data,
+            self._button_expand,
+            self._button_collapse,
+            self._button_clone,
+            self._scrollable,
+        ]:
+            widget.grid_configure(padx=PADDING_MEDIUM, pady=PADDING_SMALL)
 
     def __configure(self) -> None:
         self._tree.heading("#0", text="Filename")
@@ -135,12 +144,19 @@ class MetadataView(ttk.Frame):
             column=0, row=0, sticky="nsew", padx=PADDING_MEDIUM, pady=PADDING_MEDIUM
         )
         frame._button_clone.grid_remove()
-        frame._label_filter.grid(row=1, column=2, sticky="e", padx=PADDING_SMALL)
-        frame._entry_filter.grid(row=1, column=3, sticky="ew", padx=PADDING_SMALL)
-        frame._button_filter_apply.grid(row=1, column=4, sticky="w", padx=PADDING_SMALL)
-        frame._button_filter_clear.grid(
-            row=1, column=5, sticky="w", padx=(PADDING_SMALL, 0)
-        )
+        frame._label_filter.grid(row=1, column=2, sticky="e")
+        frame._entry_filter.grid(row=1, column=3, sticky="ew")
+        frame._button_filter_apply.grid(row=1, column=4, sticky="w")
+        frame._button_filter_clear.grid(row=1, column=5, sticky="w")
+
+        for widget in [
+            frame._label_filter,
+            frame._entry_filter,
+            frame._button_filter_apply,
+            frame._button_filter_clear,
+        ]:
+            widget.grid_configure(padx=PADDING_MEDIUM, pady=PADDING_SMALL)
+
         frame.display_metadata(self._metadata or "")
 
         window.columnconfigure(0, weight=1)

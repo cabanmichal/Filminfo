@@ -3,7 +3,7 @@ from tkinter import ttk
 
 from filminfo.app.types import AnyWidget, ButtonCallback
 from filminfo.app.validating_entry import ValidatingEntry
-from filminfo.configuration import PADDING_SMALL
+from filminfo.configuration import PADDING_MEDIUM, PADDING_SMALL
 from filminfo.models.validators import aperture_valid, iso_valid, shutter_speed_valid
 
 
@@ -50,12 +50,15 @@ class ExposureWidget(ttk.LabelFrame):
         # --- ISO ---
         self._label_iso.grid(row=2, column=0, sticky="w")
         self._entry_iso.grid(row=2, column=1, sticky="ew")
-        self._button_as_film.grid(row=2, column=2, sticky="w", padx=PADDING_SMALL)
+        self._button_as_film.grid(row=2, column=2, sticky="w")
 
         # --- buttons ---
-        self._button_clear.grid(row=6, column=0, sticky="w", padx=PADDING_SMALL)
+        self._button_clear.grid(row=6, column=0, sticky="w")
 
         self.columnconfigure(1, weight=1)
+
+        for widget in self.winfo_children():
+            widget.grid_configure(padx=PADDING_MEDIUM, pady=PADDING_SMALL)
 
     # --- Callbacks ---
     def _on_clear(self) -> None:

@@ -9,7 +9,7 @@ from filminfo.app.origin import OriginWidget
 from filminfo.app.other_tags import OtherTags
 from filminfo.app.scrollable_frame import ScrollableFrame
 from filminfo.app.types import AnyWidget
-from filminfo.configuration import PADDING_SMALL
+from filminfo.configuration import PADDING_MEDIUM, PADDING_SMALL
 from filminfo.controllers.database_controller import DatabaseController
 
 
@@ -45,19 +45,22 @@ class AddMetadataForm(ttk.Frame):
         self._form_scrollable.grid(row=0, column=0, columnspan=2, sticky="nsew")
         self._form_container.grid(row=0, column=0, sticky="nsew")
 
-        self._film_widget.grid(row=0, column=0, sticky="ew", pady=PADDING_SMALL)
-        self._camera_widget.grid(row=1, column=0, sticky="ew", pady=PADDING_SMALL)
-        self._lens_widget.grid(row=2, column=0, sticky="ew", pady=PADDING_SMALL)
-        self._origin_widget.grid(row=3, column=0, sticky="ew", pady=PADDING_SMALL)
-        self._exposure_widget.grid(row=4, column=0, sticky="ew", pady=PADDING_SMALL)
-        self._comment_widget.grid(row=5, column=0, sticky="ew", pady=PADDING_SMALL)
-        self._other_tags_widget.grid(row=6, column=0, sticky="ew", pady=PADDING_SMALL)
-        self._button_clear_all.grid(row=1, column=0, sticky="w", padx=PADDING_SMALL)
+        self._film_widget.grid(row=0, column=0, sticky="ew")
+        self._camera_widget.grid(row=1, column=0, sticky="ew")
+        self._lens_widget.grid(row=2, column=0, sticky="ew")
+        self._origin_widget.grid(row=3, column=0, sticky="ew")
+        self._exposure_widget.grid(row=4, column=0, sticky="ew")
+        self._comment_widget.grid(row=5, column=0, sticky="ew")
+        self._other_tags_widget.grid(row=6, column=0, sticky="ew")
+        self._button_clear_all.grid(row=1, column=0, sticky="w")
 
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
         self._form_scrollable.container.columnconfigure(0, weight=1)
         self._form_container.columnconfigure(0, weight=1)
+
+        for widget in self.winfo_children():
+            widget.grid_configure(padx=PADDING_MEDIUM, pady=PADDING_SMALL)
 
     def __configure(self) -> None:
         self._comment_widget.set_refresh_command(self._on_refresh_auto_comment)

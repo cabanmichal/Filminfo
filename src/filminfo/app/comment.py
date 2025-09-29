@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 
 from filminfo.app.types import AnyWidget, ButtonCallback
-from filminfo.configuration import PADDING_SMALL
+from filminfo.configuration import PADDING_MEDIUM, PADDING_SMALL
 
 
 class CommentWidget(ttk.LabelFrame):
@@ -38,10 +38,13 @@ class CommentWidget(ttk.LabelFrame):
         self._text_auto_comment.grid(row=5, column=0, columnspan=2, sticky="ew")
 
         # --- Buttons ---
-        self._button_clear.grid(row=6, column=0, sticky="w", padx=PADDING_SMALL)
-        self._button_refresh.grid(row=6, column=1, sticky="e", padx=PADDING_SMALL)
+        self._button_clear.grid(row=6, column=0, sticky="w")
+        self._button_refresh.grid(row=6, column=1, sticky="e")
 
         self.columnconfigure(1, weight=1)
+
+        for widget in self.winfo_children():
+            widget.grid_configure(padx=PADDING_MEDIUM, pady=PADDING_SMALL)
 
     # --- Callbacks ---
     def _on_clear(self) -> None:

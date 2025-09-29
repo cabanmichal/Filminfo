@@ -8,6 +8,7 @@ from platformdirs import user_config_dir
 
 from filminfo.models.validators import database_valid, file_readable, file_writeable
 
+
 __ALL__ = [
     "APP_NAME",
     "CONFIG_NAME",

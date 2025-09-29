@@ -4,7 +4,7 @@ from tkinter import messagebox, ttk
 from filminfo.app.combobox import ShiftScrollCombobox
 from filminfo.app.database_widgets import save_database
 from filminfo.app.types import AnyWidget
-from filminfo.configuration import PADDING_SMALL
+from filminfo.configuration import PADDING_MEDIUM, PADDING_SMALL
 from filminfo.controllers.database_controller import DatabaseController
 from filminfo.models.entities import Film, FilmFormat
 from filminfo.models.validators import iso_valid
@@ -71,7 +71,7 @@ class FilmWidget(ttk.LabelFrame):
         # --- Film selection ---
         self._label_film.grid(row=0, column=0, sticky="w")
         self._combo_film.grid(row=0, column=1, sticky="ew")
-        self._button_remove.grid(row=0, column=2, padx=PADDING_SMALL)
+        self._button_remove.grid(row=0, column=2)
 
         # --- Make ---
         self._label_make.grid(row=1, column=0, sticky="w")
@@ -90,10 +90,13 @@ class FilmWidget(ttk.LabelFrame):
         self._combo_format.grid(row=4, column=1, columnspan=2, sticky="ew")
 
         # --- buttons ---
-        self._button_clear.grid(row=5, column=0, sticky="w", padx=PADDING_SMALL)
-        self._button_add.grid(row=5, column=2, sticky="e", padx=PADDING_SMALL)
+        self._button_clear.grid(row=5, column=0, sticky="w")
+        self._button_add.grid(row=5, column=2, sticky="e")
 
         self.columnconfigure(1, weight=1)
+
+        for widget in self.winfo_children():
+            widget.grid_configure(padx=PADDING_MEDIUM, pady=PADDING_SMALL)
 
     def _make_film_name(self, film: Film) -> str:
         return f"{film.make} {film.name}"

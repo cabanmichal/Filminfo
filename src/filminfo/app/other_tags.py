@@ -3,7 +3,7 @@ from tkinter import ttk
 
 from filminfo.app.types import AnyWidget
 from filminfo.app.validating_entry import ValidatingEntry
-from filminfo.configuration import PADDING_SMALL
+from filminfo.configuration import PADDING_MEDIUM, PADDING_SMALL
 from filminfo.models.validators import resolution_valid
 
 
@@ -44,9 +44,12 @@ class OtherTags(ttk.LabelFrame):
         self._text_other_tags.grid(row=3, column=0, columnspan=2, sticky="ew")
 
         # --- Buttons ---
-        self._button_clear.grid(row=4, column=0, sticky="w", padx=PADDING_SMALL)
+        self._button_clear.grid(row=4, column=0, sticky="w")
 
         self.columnconfigure(1, weight=1)
+
+        for widget in self.winfo_children():
+            widget.grid_configure(padx=PADDING_MEDIUM, pady=PADDING_SMALL)
 
     # --- Callbacks ---
     def _on_clear(self) -> None:

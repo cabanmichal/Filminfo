@@ -4,7 +4,7 @@ from tkinter import ttk
 from filminfo.app.scrollable_frame import ScrollableFrame
 from filminfo.app.treeview import CustomTreeview
 from filminfo.app.types import AnyWidget
-from filminfo.configuration import APP_NAME, PADDING_SMALL
+from filminfo.configuration import APP_NAME, PADDING_MEDIUM, PADDING_SMALL
 
 
 class RemoveMetadaForm(ttk.Frame):
@@ -34,8 +34,8 @@ class RemoveMetadaForm(ttk.Frame):
 
     def _layout(self) -> None:
         self._label_tags.grid(row=0, column=0, sticky="w")
-        self._button_expand.grid(row=1, column=0, sticky="w", padx=(0, PADDING_SMALL))
-        self._button_collapse.grid(row=1, column=1, sticky="w", padx=PADDING_SMALL)
+        self._button_expand.grid(row=1, column=0, sticky="w")
+        self._button_collapse.grid(row=1, column=1, sticky="w")
 
         self._form_scrollable.grid(row=2, column=0, sticky="nsew", columnspan=3)
         self._check_tree.grid(row=0, column=0, sticky="nsew")
@@ -47,6 +47,9 @@ class RemoveMetadaForm(ttk.Frame):
         self.rowconfigure(2, weight=1)
         self._form_scrollable.container.columnconfigure(0, weight=1)
         self._form_scrollable.container.rowconfigure(0, weight=1)
+
+        for widget in self.winfo_children():
+            widget.grid_configure(padx=PADDING_MEDIUM, pady=PADDING_SMALL)
 
     def __configure(self) -> None:
         app_name = APP_NAME.capitalize()

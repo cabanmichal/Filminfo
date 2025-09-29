@@ -4,7 +4,7 @@ from tkinter import messagebox, ttk
 from filminfo.app.combobox import ShiftScrollCombobox
 from filminfo.app.database_widgets import save_database
 from filminfo.app.types import AnyWidget
-from filminfo.configuration import PADDING_SMALL
+from filminfo.configuration import PADDING_MEDIUM, PADDING_SMALL
 from filminfo.controllers.database_controller import DatabaseController
 from filminfo.models.entities import Camera, CropFactor
 from filminfo.models.validators import crop_valid
@@ -88,10 +88,13 @@ class CameraWidget(ttk.LabelFrame):
         self._entry_serial.grid(row=4, column=1, columnspan=2, sticky="ew")
 
         # --- buttons ---
-        self._button_clear.grid(row=5, column=0, sticky="w", padx=PADDING_SMALL)
-        self._button_add.grid(row=5, column=2, sticky="e", padx=PADDING_SMALL)
+        self._button_clear.grid(row=5, column=0, sticky="w")
+        self._button_add.grid(row=5, column=2, sticky="e")
 
         self.columnconfigure(1, weight=1)
+
+        for widget in self.winfo_children():
+            widget.grid_configure(padx=PADDING_MEDIUM, pady=PADDING_SMALL)
 
     def _make_camera_name(self, camera: Camera) -> str:
         parts = [camera.make, camera.model]

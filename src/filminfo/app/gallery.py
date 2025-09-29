@@ -8,7 +8,7 @@ from filminfo.app import add_bindtag, find_ancestor
 from filminfo.app.scrollable_frame import ScrollableFrame
 from filminfo.app.thumbnail import Thumbnail
 from filminfo.app.types import AnyWidget
-from filminfo.configuration import PADDING_SMALL
+from filminfo.configuration import PADDING_MEDIUM, PADDING_SMALL
 
 
 class Gallery(ttk.Frame):
@@ -39,7 +39,7 @@ class Gallery(ttk.Frame):
 
     def _layout(self) -> None:
         self._toolbar.grid(row=0, column=0, sticky="ew")
-        self._scrollable.grid(row=1, column=0, sticky="nsew")
+        self._scrollable.grid(row=1, column=0, sticky="nsew", padx=(PADDING_SMALL, 0))
         self._statusbar.grid(row=2, column=0, sticky="ew")
         self.columnconfigure(0, weight=1)
         self.rowconfigure(1, weight=1)
@@ -252,10 +252,13 @@ class _Toolbar(ttk.Frame):
         self._layout()
 
     def _layout(self) -> None:
-        self.button_add.grid(row=0, column=0, sticky="w", padx=(0, PADDING_SMALL))
-        self._label_pattern.grid(row=0, column=1, sticky="e", padx=(0, PADDING_SMALL))
+        self.button_add.grid(row=0, column=0, sticky="w")
+        self._label_pattern.grid(row=0, column=1, sticky="e")
         self.entry_pattern.grid(row=0, column=2, sticky="ew")
-        self.button_pattern_apply.grid(row=0, column=3, sticky="w", padx=PADDING_SMALL)
+        self.button_pattern_apply.grid(row=0, column=3, sticky="w")
+
+        for widget in self.winfo_children():
+            widget.grid_configure(padx=PADDING_MEDIUM, pady=PADDING_SMALL)
 
     @property
     def pattern(self) -> str:
@@ -269,6 +272,9 @@ class _StatusBar(ttk.Frame):
         self._label = ttk.Label(self, textvariable=self._label_var)
         self._label.grid(row=0, column=0, sticky="e")
         self.columnconfigure(0, weight=1)
+
+        for widget in self.winfo_children():
+            widget.grid_configure(padx=PADDING_MEDIUM, pady=PADDING_SMALL)
 
     def set_image_counts(self, selected: int, total: int) -> None:
         self._label_var.set(f"Selected: {selected}/{total}")

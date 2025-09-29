@@ -8,6 +8,7 @@ from filminfo.app import add_bindtag
 from filminfo.app.types import AnyWidget
 from filminfo.configuration import PADDING_SMALL, get_string_option
 
+
 ThumbnailCallback = Callable[["Thumbnail"], None]
 
 

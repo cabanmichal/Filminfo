@@ -5,7 +5,7 @@ from tkinter import ttk
 from filminfo.app.combobox import ShiftScrollCombobox
 from filminfo.app.types import AnyWidget
 from filminfo.app.validating_entry import ValidatingEntry
-from filminfo.configuration import PADDING_SMALL, get_string_option
+from filminfo.configuration import PADDING_MEDIUM, PADDING_SMALL, get_string_option
 from filminfo.models.entities import COUNTRIES
 from filminfo.models.validators import date_taken_valid, latitude_valid, longitude_valid
 
@@ -65,7 +65,7 @@ class OriginWidget(ttk.LabelFrame):
         # --- Copyright ---
         self._label_copyright.grid(row=1, column=0, sticky="w")
         self._entry_copyright.grid(row=1, column=1, sticky="ew")
-        self._button_copyright.grid(row=1, column=2, sticky="ew", padx=PADDING_SMALL)
+        self._button_copyright.grid(row=1, column=2, sticky="ew")
 
         # --- City ---
         self._label_city.grid(row=2, column=0, sticky="w")
@@ -80,24 +80,20 @@ class OriginWidget(ttk.LabelFrame):
         self._combo_country.grid(row=4, column=1, columnspan=2, sticky="ew")
 
         # --- GPS ---
-        self._gps.grid(
-            row=5,
-            column=0,
-            columnspan=3,
-            sticky="ew",
-            padx=PADDING_SMALL,
-            pady=PADDING_SMALL,
-        )
+        self._gps.grid(row=5, column=0, columnspan=3, sticky="ew")
 
         # --- Date taken ---
         self._label_date_taken.grid(row=6, column=0, sticky="w")
         self._entry_date_taken.grid(row=6, column=1, sticky="ew")
-        self._button_today.grid(row=6, column=2, sticky="ew", padx=PADDING_SMALL)
+        self._button_today.grid(row=6, column=2, sticky="ew")
 
         # --- buttons ---
-        self._button_clear.grid(row=7, column=0, sticky="w", padx=PADDING_SMALL)
+        self._button_clear.grid(row=7, column=0, sticky="w")
 
         self.columnconfigure(1, weight=1)
+
+        for widget in self.winfo_children():
+            widget.grid_configure(padx=PADDING_MEDIUM, pady=PADDING_SMALL)
 
     def _get_default_country(self) -> str:
         if (country := get_string_option("country")) and country in [
@@ -211,6 +207,9 @@ class _GPS(ttk.LabelFrame):
         self._entry_lat.grid(row=1, column=1, sticky="ew")
         self._label_lon.grid(row=2, column=0, sticky="w")
         self._entry_lon.grid(row=2, column=1, sticky="ew")
+
+        for widget in self.winfo_children():
+            widget.grid_configure(padx=PADDING_MEDIUM, pady=PADDING_SMALL)
 
     def clear(self) -> None:
         self._lat_var.set("")
