@@ -54,10 +54,11 @@ class Gallery(ttk.Frame):
 
         control_key = "Command" if platform.system() == "Darwin" else "Control"
         delete_key = "BackSpace" if platform.system() == "Darwin" else "Delete"
+        asterisk_key = "Key-*" if platform.system() == "Windows" else "asterisk"
         self.bind("<Configure>", self._on_resize)
         self.bind("<Escape>", self._on_deselect_all)
         self.bind(f"<{control_key}-a>", self._on_select_all)
-        self.bind("<asterisk>", self._on_invert_selection)
+        self.bind(f"<{asterisk_key}>", self._on_invert_selection)
         self.bind(f"<{delete_key}>", self._on_remove_images)
         self.bind_all(f"<{control_key}-o>", self._on_add_images)
 
