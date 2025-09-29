@@ -100,3 +100,21 @@ def resolution_valid(resolution: str) -> bool:
         return False
 
     return aperture_value > 0
+
+
+def latitude_valid(latitude: str) -> bool:
+    try:
+        value = float(latitude)
+    except (ValueError, TypeError):
+        return False
+
+    return -90 <= value <= 90
+
+
+def longitude_valid(longitude: str) -> bool:
+    try:
+        value = float(longitude)
+    except (ValueError, TypeError):
+        return False
+
+    return -180 <= value <= 180

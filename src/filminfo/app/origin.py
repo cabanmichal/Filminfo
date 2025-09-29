@@ -7,7 +7,7 @@ from filminfo.app.types import AnyWidget
 from filminfo.app.validating_entry import ValidatingEntry
 from filminfo.configuration import PADDING_SMALL, get_string_option
 from filminfo.models.entities import COUNTRIES
-from filminfo.models.validators import date_taken_valid
+from filminfo.models.validators import date_taken_valid, latitude_valid, longitude_valid
 
 
 class OriginWidget(ttk.LabelFrame):
@@ -43,6 +43,7 @@ class OriginWidget(ttk.LabelFrame):
             values=[country for country, _ in COUNTRIES],
         )
 
+        self._gps = _GPS(self, text="GPS coordinates")
         self._label_date_taken = ttk.Label(self, text="Date taken:")
         self._entry_date_taken = ValidatingEntry(
             self, textvariable=self._date_taken_var
@@ -78,13 +79,23 @@ class OriginWidget(ttk.LabelFrame):
         self._label_country.grid(row=4, column=0, sticky="w")
         self._combo_country.grid(row=4, column=1, columnspan=2, sticky="ew")
 
+        # --- GPS ---
+        self._gps.grid(
+            row=5,
+            column=0,
+            columnspan=3,
+            sticky="ew",
+            padx=PADDING_SMALL,
+            pady=PADDING_SMALL,
+        )
+
         # --- Date taken ---
-        self._label_date_taken.grid(row=5, column=0, sticky="w")
-        self._entry_date_taken.grid(row=5, column=1, sticky="ew")
-        self._button_today.grid(row=5, column=2, sticky="ew", padx=PADDING_SMALL)
+        self._label_date_taken.grid(row=6, column=0, sticky="w")
+        self._entry_date_taken.grid(row=6, column=1, sticky="ew")
+        self._button_today.grid(row=6, column=2, sticky="ew", padx=PADDING_SMALL)
 
         # --- buttons ---
-        self._button_clear.grid(row=6, column=0, sticky="w", padx=PADDING_SMALL)
+        self._button_clear.grid(row=7, column=0, sticky="w", padx=PADDING_SMALL)
 
         self.columnconfigure(1, weight=1)
 
@@ -133,15 +144,37 @@ class OriginWidget(ttk.LabelFrame):
         return self._country_var.get().strip()
 
     @property
+    def gps_latitude(self) -> str:
+        return self._gps.latitude
+
+    @property
+    def gps_longitude(self) -> str:
+        return self._gps.longitude
+
+    @property
     def date_taken(self) -> str:
         return self._date_taken_var.get().strip()
 
-    def clear(self):
+    @property
+    def data(self) -> dict[str, str]:
+        return {
+            "origin_author": self.author,
+            "origin_copyright": self.copyright,
+            "origin_city": self.city,
+            "origin_sublocation": self.sublocation,
+            "origin_country": self.country,
+            "origin_gps_latitude": self.gps_latitude,
+            "origin_gps_longitude": self.gps_longitude,
+            "origin_date_taken": self.date_taken,
+        }
+
+    def clear(self) -> None:
         self._author_var.set("")
         self._copyright_var.set("")
         self._city_var.set("")
         self._sublocation_var.set("")
         self._country_var.set("")
+        self._gps.clear()
         self._date_taken_var.set("")
 
 
@@ -150,3 +183,43 @@ def _default_time() -> str:
     noon_time = time(12, 0, 0)
 
     return datetime.combine(today, noon_time).strftime("%Y:%m:%d %H:%M:%S")
+
+
+class _GPS(ttk.LabelFrame):
+    def __init__(self, parent: AnyWidget, *args, **kwargs):
+        super().__init__(parent, *args, **kwargs)
+
+        self._lat_var = tk.StringVar()
+        self._lon_var = tk.StringVar()
+        self._label_example = ttk.Label(
+            self,
+            text=("Example: -44.67216452274076, 167.9225463149234"),
+        )
+        self._label_lat = ttk.Label(self, text="Latitude:")
+        self._label_lon = ttk.Label(self, text="Longitude:")
+        self._entry_lat = ValidatingEntry(self, textvariable=self._lat_var)
+        self._entry_lon = ValidatingEntry(self, textvariable=self._lon_var)
+        self._entry_lat.set_command(lambda lat: not lat or latitude_valid(str(lat)))
+        self._entry_lon.set_command(lambda lon: not lon or longitude_valid(str(lon)))
+
+        self._layout()
+
+    def _layout(self) -> None:
+        self.columnconfigure(1, weight=1)
+        self._label_example.grid(row=0, column=0, columnspan=2, sticky="w")
+        self._label_lat.grid(row=1, column=0, sticky="w")
+        self._entry_lat.grid(row=1, column=1, sticky="ew")
+        self._label_lon.grid(row=2, column=0, sticky="w")
+        self._entry_lon.grid(row=2, column=1, sticky="ew")
+
+    def clear(self) -> None:
+        self._lat_var.set("")
+        self._lon_var.set("")
+
+    @property
+    def latitude(self) -> str:
+        return self._lat_var.get().strip()
+
+    @property
+    def longitude(self) -> str:
+        return self._lon_var.get().strip()

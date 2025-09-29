@@ -65,6 +65,14 @@ class CommentWidget(ttk.LabelFrame):
         self._text_auto_comment.delete("1.0", "end")
         self._text_auto_comment.insert("1.0", comment)
 
+    @property
+    def data(self) -> dict[str, str]:
+        return {
+            "comments_description": self.description,
+            "comments_user_comment": self.user_comment,
+            "comments_auto_comment": self.auto_comment,
+        }
+
     def set_refresh_command(self, command: ButtonCallback) -> None:
         self._button_refresh.config(command=command)
 

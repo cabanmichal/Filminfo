@@ -62,6 +62,13 @@ class OtherTags(ttk.LabelFrame):
         tags = self._text_other_tags.get("1.0", "end").strip().split(",")
         return [tag.strip() for tag in tags]
 
+    @property
+    def data(self) -> dict[str, str]:
+        return {
+            "other_resolution": self.resolution,
+            "other_tags": ",".join(self.other_tags),
+        }
+
     def clear(self) -> None:
         self._resolution_var.set("")
         self._text_other_tags.delete("1.0", "end")

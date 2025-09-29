@@ -105,31 +105,12 @@ class AddMetadataForm(ttk.Frame):
 
     @property
     def form_data(self) -> dict[str, str]:
-        return {
-            "film_make": self._film_widget.make,
-            "film_name": self._film_widget.name,
-            "film_iso": self._film_widget.iso,
-            "film_format": self._film_widget.format,
-            "camera_make": self._camera_widget.make,
-            "camera_model": self._camera_widget.model,
-            "camera_crop": str(self._camera_widget.crop),
-            "camera_serial": self._camera_widget.serial,
-            "lens_make": self._lens_widget.make,
-            "lens_model": self._lens_widget.model,
-            "lens_focal_length": self._lens_widget.focal_length,
-            "lens_serial": self._lens_widget.serial,
-            "origin_author": self._origin_widget.author,
-            "origin_copyright": self._origin_widget.copyright,
-            "origin_city": self._origin_widget.city,
-            "origin_sublocation": self._origin_widget.sublocation,
-            "origin_country": self._origin_widget.country,
-            "origin_date_taken": self._origin_widget.date_taken,
-            "exposure_aperture": self._exposure_widget.aperture,
-            "exposure_shutter_speed": self._exposure_widget.shutter_speed,
-            "exposure_iso": self._exposure_widget.iso,
-            "comments_description": self._comment_widget.description,
-            "comments_user_comment": self._comment_widget.user_comment,
-            "comments_auto_comment": self._comment_widget.auto_comment,
-            "other_resolution": self._other_tags_widget.resolution,
-            "other_tags": ",".join(self._other_tags_widget.other_tags),
-        }
+        return (
+            self._film_widget.data
+            | self._camera_widget.data
+            | self._lens_widget.data
+            | self._origin_widget.data
+            | self._exposure_widget.data
+            | self._comment_widget.data
+            | self._other_tags_widget.data
+        )

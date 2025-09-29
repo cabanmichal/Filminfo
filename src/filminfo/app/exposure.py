@@ -78,6 +78,14 @@ class ExposureWidget(ttk.LabelFrame):
     def iso(self, value: str) -> None:
         self._iso_var.set(value)
 
+    @property
+    def data(self) -> dict[str, str]:
+        return {
+            "exposure_aperture": self.aperture,
+            "exposure_shutter_speed": self.shutter_speed,
+            "exposure_iso": self.iso,
+        }
+
     def set_as_film_command(self, command: ButtonCallback) -> None:
         self._button_as_film.config(command=command)
 

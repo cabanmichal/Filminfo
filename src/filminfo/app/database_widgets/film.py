@@ -170,6 +170,15 @@ class FilmWidget(ttk.LabelFrame):
     def format(self) -> str:
         return self._format_var.get().strip()
 
+    @property
+    def data(self) -> dict[str, str]:
+        return {
+            "film_make": self.make,
+            "film_name": self.name,
+            "film_iso": self.iso,
+            "film_format": self.format,
+        }
+
     def clear(self) -> None:
         self._film_var.set("")
         self._make_var.set("")

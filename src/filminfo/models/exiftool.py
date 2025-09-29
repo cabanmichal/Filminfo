@@ -14,6 +14,8 @@ from filminfo.models.validators import (
     date_taken_valid,
     focal_length_valid,
     iso_valid,
+    latitude_valid,
+    longitude_valid,
     resolution_valid,
     shutter_speed_valid,
 )
@@ -72,6 +74,8 @@ class ExifTool:
         origin_city = medatada.get("origin_city")
         origin_sublocation = medatada.get("origin_sublocation")
         origin_country = medatada.get("origin_country")
+        origin_gps_latitude = medatada.get("origin_gps_latitude")
+        origin_gps_longitude = medatada.get("origin_gps_longitude")
         origin_date_taken = medatada.get("origin_date_taken")
         exposure_aperture = medatada.get("exposure_aperture")
         exposure_shutter_speed = medatada.get("exposure_shutter_speed")
@@ -101,6 +105,8 @@ class ExifTool:
                 origin_city,
                 origin_sublocation,
                 origin_country,
+                origin_gps_latitude,
+                origin_gps_longitude,
                 origin_date_taken,
                 exposure_aperture,
                 exposure_shutter_speed,
@@ -151,6 +157,22 @@ class ExifTool:
                 args.append(f"-IPTC:Country-PrimaryLocationCode={code}")
                 args.append(f"-XMP-iptcCore:CountryCode={code}")
                 args.append(f"-XMP-iptcExt:LocationCreatedCountryCode={code}")
+
+        if origin_gps_latitude:
+            if not latitude_valid(origin_gps_latitude):
+                raise ValueError("Invalid latitude")
+            value = float(origin_gps_latitude)
+            ref = "S" if value < 0 else "N"
+            args.append(f"-EXIF:GPSLatitudeRef={ref}")
+            args.append(f"-EXIF:GPSLatitude={value}")
+
+        if origin_gps_longitude:
+            if not longitude_valid(origin_gps_longitude):
+                raise ValueError("Invalid longitude")
+            value = float(origin_gps_longitude)
+            ref = "W" if value < 0 else "E"
+            args.append(f"-EXIF:GPSLongitudeRef={ref}")
+            args.append(f"-EXIF:GPSLongitude={value}")
 
         if origin_city:
             args.append(f"-IPTC:City={origin_city}")

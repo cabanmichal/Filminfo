@@ -179,6 +179,15 @@ class LensWidget(ttk.LabelFrame):
     def serial(self) -> str:
         return self._serial_var.get().strip()
 
+    @property
+    def data(self) -> dict[str, str]:
+        return {
+            "lens_make": self.make,
+            "lens_model": self.model,
+            "lens_focal_length": self.focal_length,
+            "lens_serial": self.serial,
+        }
+
     def clear(self):
         self._lens_var.set("")
         self._make_var.set("")

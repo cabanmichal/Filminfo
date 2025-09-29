@@ -196,6 +196,15 @@ class CameraWidget(ttk.LabelFrame):
     def serial(self) -> str:
         return self._serial_var.get().strip()
 
+    @property
+    def data(self) -> dict[str, str]:
+        return {
+            "camera_make": self.make,
+            "camera_model": self.model,
+            "camera_crop": self.crop,
+            "camera_serial": self.serial,
+        }
+
     def clear(self) -> None:
         self._camera_var.set("")
         self._make_var.set("")
