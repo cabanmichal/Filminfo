@@ -1,4 +1,4 @@
-# <img width="100" alt="App icon" src="https://github.com/cabanmichal/Filminfo/raw/main/assets/icon.png" /> Filminfo
+# <img width="50" alt="App icon" src="https://github.com/cabanmichal/Filminfo/raw/main/assets/icon.png" /> Filminfo
 
 Simple gui to add basic metadata to film scans.
 
@@ -12,7 +12,7 @@ Simple gui to add basic metadata to film scans.
 
 ### Add metadata
 
-<img width="600" alt="Add metadata view" src="https://github.com/cabanmichal/Filminfo/raw/main/docs/images/01_add_metadata.png" />
+<img width="600" alt="Add metadata view" src="https://github.com/cabanmichal/Filminfo/raw/main/docs/images/01_add_metadata.webp" />
 
 -   You can add images by pressing the `[Add images]` button or `<Command-o>`/`<Control-o>`.
 -   `<Command-a>`/`<Control-a>` selects all images.
@@ -24,27 +24,27 @@ Simple gui to add basic metadata to film scans.
 
 ### Image preview
 
-<img width="600" alt="Image preview" src="https://github.com/cabanmichal/Filminfo/raw/main/docs/images/02_preview.png" />
+<img width="600" alt="Image preview" src="https://github.com/cabanmichal/Filminfo/raw/main/docs/images/02_preview.webp" />
 
 -   Right clicks on a thumbnail opens and closes the preview.
 
 ### Remove metadata
 
-<img width="600" alt="Remove metadata view" src="https://github.com/cabanmichal/Filminfo/raw/main/docs/images/03_remove_metadata.png" />
+<img width="600" alt="Remove metadata view" src="https://github.com/cabanmichal/Filminfo/raw/main/docs/images/03_remove_metadata.webp" />
 
 -   Clicking on the indicators while holding `<Shift>` expands/collapses whole subtrees.
 -   Metadata are removed from selected images by pressing the `[Execute]` button.
 
 ### View metadata
 
-<img width="600" alt="View metadata view" src="https://github.com/cabanmichal/Filminfo/raw/main/docs/images/04_view_metadata.png" />
+<img width="600" alt="View metadata view" src="https://github.com/cabanmichal/Filminfo/raw/main/docs/images/04_view_metadata.webp" />
 
 -   Pressing the `[Execute]` button metadata of the selected images are loaded.
 -   The metadata can be viewed in a separate window (press `[To new window]`).
 
 ### Filter metadata
 
-<img width="600" alt="Filter metadata view" src="https://github.com/cabanmichal/Filminfo/raw/main/docs/images/05_filter_metadata.png" />
+<img width="600" alt="Filter metadata view" src="https://github.com/cabanmichal/Filminfo/raw/main/docs/images/05_filter_metadata.webp" />
 
 -   In the separate window metadata can be filtered using regular expression.
 -   Double-click copies cell value to clipboard.
