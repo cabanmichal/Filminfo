@@ -133,5 +133,6 @@ class Thumbnail(tk.Frame):
             self._preview = None
             window.destroy()
 
-        label.bind("<Button-3>", lambda e: on_preview_close())
+        window.bind("<Escape>", lambda e: on_preview_close())
+        window.bind("<Button-3>", lambda e: on_preview_close())
         window.protocol("WM_DELETE_WINDOW", on_preview_close)
