@@ -146,6 +146,7 @@ class App(ttk.Frame):
             callback = self._remove_metadata
         else:
             callback = self._display_metadata
+            self._button_execute.focus_set()
 
         self._button_execute.configure(command=callback)
 
