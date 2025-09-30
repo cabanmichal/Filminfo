@@ -1,4 +1,4 @@
-# <img width="50" alt="App icon" src="https://github.com/cabanmichal/Filminfo/raw/main/assets/icon.png" /> Filminfo
+# <img width="50" alt="App icon" src="https://github.com/cabanmichal/Filminfo/raw/main/src/filminfo/assets/icon.png" /> Filminfo
 
 Simple gui to add basic metadata to film scans.
 

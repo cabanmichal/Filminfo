@@ -3,7 +3,7 @@ name = "filminfo"
 version = "0.1.4"
 description = "Exiftool frontend to add basic information to film scans."
 authors = [
-    { name = "Michal Caban", email = "" }
+    { name = "Michal Caban", email = "nomail@cabanmichal.xyz" }
 ]
 readme = "README.md"
 requires-python = ">=3.12"
@@ -17,11 +17,14 @@ dependencies = [
 filminfo = "filminfo.__main__:main"
 
 [build-system]
-requires = ["uv_build>=0.8.15,<0.9.0"]
-build-backend = "uv_build"
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
 
-[tool.uv]
-package = true
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+filminfo = ["assets/*.png"]
 
 [tool.ruff.lint.isort]
 lines-after-imports = 2

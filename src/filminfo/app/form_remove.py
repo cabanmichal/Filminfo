@@ -1,5 +1,8 @@
+import importlib.resources as resources
 import tkinter as tk
 from tkinter import ttk
+
+from PIL import Image, ImageTk
 
 from filminfo.app.scrollable_frame import ScrollableFrame
 from filminfo.app.treeview import CustomTreeview
@@ -130,22 +133,23 @@ class RemoveMetadaForm(ttk.Frame):
 
 
 class _CheckTree(ttk.Frame):
-    ICON_UNCHECKED = "□"
-    ICON_CHECKED = "☑"
-    ICON_PARTIAL = "▣"
-
     STATE_UNCHECKED = 0
     STATE_CHECKED = 1
     STATE_PARTIAL = 2
 
-    STATE_ICON_MAP = {
-        STATE_UNCHECKED: ICON_UNCHECKED,
-        STATE_CHECKED: ICON_CHECKED,
-        STATE_PARTIAL: ICON_PARTIAL,
-    }
-
     def __init__(self, parent: AnyWidget, *args, **kwargs) -> None:
         super().__init__(parent, *args, **kwargs)
+
+        self._button_size = (20, 12)
+        self._icon_unchecked = self._crate_icon("checkbox_0.png")
+        self._icon_checked = self._crate_icon("checkbox_1.png")
+        self._icon_partial = self._crate_icon("checkbox_2.png")
+
+        self._states_map = {
+            _CheckTree.STATE_UNCHECKED: self._icon_unchecked,
+            _CheckTree.STATE_CHECKED: self._icon_checked,
+            _CheckTree.STATE_PARTIAL: self._icon_partial,
+        }
 
         self._height = 0
         self._states: dict[str, int] = {}
@@ -158,22 +162,16 @@ class _CheckTree(ttk.Frame):
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
 
-    def _remove_checkmarks(self, item: str) -> str:
-        to_strip = "".join(
-            [
-                _CheckTree.ICON_UNCHECKED,
-                _CheckTree.ICON_CHECKED,
-                _CheckTree.ICON_PARTIAL,
-                " ",
-            ]
-        )
-        return item.lstrip(to_strip)
+    def _crate_icon(self, filename: str) -> ImageTk.PhotoImage:
+        with resources.path("filminfo.assets", filename) as path:
+            image = Image.open(path).resize(self._button_size, Image.Resampling.LANCZOS)
+
+            return ImageTk.PhotoImage(image)
 
     def _set_state(self, item: str, state: int) -> None:
         self._states[item] = state
-        label = self._remove_checkmarks(self._tree.item(item, "text"))
-        symbol = _CheckTree.STATE_ICON_MAP[state]
-        self._tree.item(item, text=f"{symbol} {label}")
+        icon = self._states_map[state]
+        self._tree.item(item, image=icon)
 
     def _propagate_to_children(self, item: str, state: int) -> None:
         for child in self._tree.get_children(item):
@@ -198,7 +196,7 @@ class _CheckTree(ttk.Frame):
     # --- Callbacks ---
     def _on_click(self, event: tk.Event) -> None:
         element = self._tree.identify("element", event.x, event.y)
-        if element != "text":
+        if element != "image" and element != "text":
             return
 
         item = self._tree.identify_row(event.y)
@@ -219,9 +217,10 @@ class _CheckTree(ttk.Frame):
             self._tree.insert(
                 parent,
                 "end",
-                text=f"{_CheckTree.ICON_UNCHECKED} {text}",
+                text=text,
                 open=open,
                 iid=item,
+                image=self._icon_unchecked,
             )
             self._states[item] = _CheckTree.STATE_UNCHECKED
         else:
@@ -232,7 +231,7 @@ class _CheckTree(ttk.Frame):
         leaves = []
         for item, state in self._states.items():
             if state == _CheckTree.STATE_CHECKED and not self._tree.get_children(item):
-                label = self._remove_checkmarks(self._tree.item(item, "text"))
+                label = self._tree.item(item, "text")
                 leaves.append(label)
         return leaves
 
