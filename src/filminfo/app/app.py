@@ -80,26 +80,38 @@ class App(ttk.Frame):
         self._notebook.bind("<<NotebookTabChanged>>", self._on_tab_change)
 
     def _add_metadata(self) -> None:
+        images = self.selected_images
+
         if not messagebox.askyesno(
-            "Confirm", "Are you sure you want to add metadata to selected images?"
+            "Confirm",
+            (
+                "Are you sure you want to add metadata to "
+                f"{len(images)} selected images?"
+            ),
         ):
             return None
 
         self._call_exiftool(
             lambda: self._exiftool_controller.add_metadata(
-                images=self.selected_images, metadata=self.form_data
+                images=images, metadata=self.form_data
             )
         )
 
     def _remove_metadata(self) -> None:
+        images = self.selected_images
+
         if not messagebox.askyesno(
-            "Confirm", "Are you sure you want to remove metadata from selected images?"
+            "Confirm",
+            (
+                "Are you sure you want to remove metadata from "
+                f"{len(images)} selected images?"
+            ),
         ):
             return None
 
         self._call_exiftool(
             lambda: self._exiftool_controller.remove_metadata(
-                images=self.selected_images, tags=self.tags_to_remove
+                images=images, tags=self.tags_to_remove
             )
         )
 
@@ -119,11 +131,18 @@ class App(ttk.Frame):
 
         reply = action()
         error, message = reply
+        text_limit = 2_000
+        msg = str(error) if error else message
+        msg = (
+            msg[:text_limit] + "\n\nOutput truncated..."
+            if len(msg) > text_limit
+            else msg
+        )
         if error:
-            messagebox.showerror("ExifTool Error", str(error), icon="error")
+            messagebox.showerror("ExifTool Error", msg, icon="error")
         elif message:
             if showmessage:
-                messagebox.showinfo("ExifTool Info", message, icon="info")
+                messagebox.showinfo("ExifTool Info", msg, icon="info")
         else:
             messagebox.showwarning(
                 f"{APP_NAME.capitalize()} Warning",
