@@ -81,7 +81,7 @@ class RemoveMetadaForm(ttk.Frame):
             f"/{app_name}/Origin/Sublocation/IPTC:Sub-location",
             f"/{app_name}/Origin/Sublocation/XMP-iptcCore:Location",
             f"/{app_name}/Origin/Sublocation/XMP-iptcExt:LocationShownSublocation",
-            f"/{app_name}/Origin/Country/IPTC:Country-PrimaryLocaitonName",
+            f"/{app_name}/Origin/Country/IPTC:Country-PrimaryLocationName",
             f"/{app_name}/Origin/Country/XMP-photoshop:Country",
             f"/{app_name}/Origin/Country/XMP-iptcExt:LocationShownCountryName",
             f"/{app_name}/Origin/Country code/IPTC:Country-PrimaryLocationCode",
