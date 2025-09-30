@@ -25,6 +25,11 @@ class OriginWidget(ttk.LabelFrame):
         # --- Elements ---
         self._label_author = ttk.Label(self, text="Author:")
         self._entry_author = ttk.Entry(self, textvariable=self._author_var)
+        self._button_author = ttk.Button(
+            self,
+            text="Me",
+            command=lambda: self._author_var.set(get_string_option("author")),
+        )
 
         self._label_copyright = ttk.Label(self, text="Copyright:")
         self._entry_copyright = ttk.Entry(self, textvariable=self._copyright_var)
@@ -41,6 +46,11 @@ class OriginWidget(ttk.LabelFrame):
             self,
             textvariable=self._country_var,
             values=[country for country, _ in COUNTRIES],
+        )
+        self._button_country = ttk.Button(
+            self,
+            text="Default",
+            command=lambda: self._country_var.set(self._get_default_country()),
         )
 
         self._gps = _GPS(self, text="GPS coordinates")
@@ -60,7 +70,8 @@ class OriginWidget(ttk.LabelFrame):
     def _layout(self) -> None:
         # --- Author ---
         self._label_author.grid(row=0, column=0, sticky="w")
-        self._entry_author.grid(row=0, column=1, columnspan=2, sticky="ew")
+        self._entry_author.grid(row=0, column=1, sticky="ew")
+        self._button_author.grid(row=0, column=2, sticky="ew")
 
         # --- Copyright ---
         self._label_copyright.grid(row=1, column=0, sticky="w")
@@ -77,7 +88,8 @@ class OriginWidget(ttk.LabelFrame):
 
         # --- Country ---
         self._label_country.grid(row=4, column=0, sticky="w")
-        self._combo_country.grid(row=4, column=1, columnspan=2, sticky="ew")
+        self._combo_country.grid(row=4, column=1, sticky="ew")
+        self._button_country.grid(row=4, column=2, sticky="ew")
 
         # --- GPS ---
         self._gps.grid(row=5, column=0, columnspan=3, sticky="ew")
