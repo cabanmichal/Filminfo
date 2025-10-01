@@ -49,6 +49,22 @@ Simple gui to add basic metadata to film scans.
 -   In the separate window metadata can be filtered using regular expression.
 -   Double-click copies cell value to clipboard.
 
+## Installation
+
+This is a python package. It requires python >= 3.12 and tkinter. One way to install the package:
+
+```
+git clone https://github.com/cabanmichal/Filminfo.git
+cd Filminfo
+pip install .
+```
+
+To run it:
+
+```
+python -m filminfo
+```
+
 ## Attributions
 
 Icon from: <a href="https://www.flaticon.com/free-icons/film-roll" title="film roll icons">Film roll icons created by Freepik - Flaticon</a>
