@@ -1,9 +1,11 @@
 import tkinter as tk
 from tkinter import ttk
 
+from filminfo.app.combobox import ShiftScrollCombobox
 from filminfo.app.types import AnyWidget, ButtonCallback
 from filminfo.app.validating_entry import ValidatingEntry
 from filminfo.configuration import PADDING_MEDIUM, PADDING_SMALL
+from filminfo.models.entities import FLASH_VALUES
 from filminfo.models.validators import aperture_valid, iso_valid, shutter_speed_valid
 
 
@@ -15,6 +17,7 @@ class ExposureWidget(ttk.LabelFrame):
         self._aperture_var = tk.StringVar()
         self._ss_var = tk.StringVar()
         self._iso_var = tk.StringVar()
+        self._flash_var = tk.StringVar()
 
         # --- Elements ---
         self._label_aperture = ttk.Label(self, text="Aperture:")
@@ -34,6 +37,14 @@ class ExposureWidget(ttk.LabelFrame):
         self._entry_iso.set_command(lambda iso: not iso or iso_valid(str(iso)))
         self._button_as_film = ttk.Button(self, text="As film")
 
+        self._label_flash = ttk.Label(self, text="Flash:")
+        self._combo_flash = ShiftScrollCombobox(
+            self,
+            textvariable=self._flash_var,
+            values=[""] + list(FLASH_VALUES),
+            state="readonly",
+        )
+
         self._button_clear = ttk.Button(self, text="Clear", command=self._on_clear)
 
         self._layout()
@@ -51,6 +62,10 @@ class ExposureWidget(ttk.LabelFrame):
         self._label_iso.grid(row=2, column=0, sticky="w")
         self._entry_iso.grid(row=2, column=1, sticky="ew")
         self._button_as_film.grid(row=2, column=2, sticky="w")
+
+        # --- Flash ---
+        self._label_flash.grid(row=3, column=0, sticky="w")
+        self._combo_flash.grid(row=3, column=1, columnspan=2, sticky="ew")
 
         # --- buttons ---
         self._button_clear.grid(row=6, column=0, sticky="w")
@@ -82,11 +97,16 @@ class ExposureWidget(ttk.LabelFrame):
         self._iso_var.set(value)
 
     @property
+    def flash(self) -> str:
+        return self._flash_var.get().strip()
+
+    @property
     def data(self) -> dict[str, str]:
         return {
             "exposure_aperture": self.aperture,
             "exposure_shutter_speed": self.shutter_speed,
             "exposure_iso": self.iso,
+            "exposure_flash": self.flash,
         }
 
     def set_as_film_command(self, command: ButtonCallback) -> None:
@@ -96,3 +116,4 @@ class ExposureWidget(ttk.LabelFrame):
         self._aperture_var.set("")
         self._ss_var.set("")
         self._iso_var.set("")
+        self._flash_var.set("")

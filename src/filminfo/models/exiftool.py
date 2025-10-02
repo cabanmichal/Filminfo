@@ -9,7 +9,7 @@ from filminfo.models.convertes import (
     parse_shutter_speed,
     to_ascii,
 )
-from filminfo.models.entities import COUNTRIES
+from filminfo.models.entities import COUNTRIES, FLASH_VALUES
 from filminfo.models.validators import (
     aperture_valid,
     date_taken_valid,
@@ -107,6 +107,7 @@ class ExifTool:
         exposure_aperture = medatada.get("exposure_aperture")
         exposure_shutter_speed = medatada.get("exposure_shutter_speed")
         exposure_iso = medatada.get("exposure_iso")
+        exposure_flash = medatada.get("exposure_flash")
         comments_description = medatada.get("comments_description")
         comments_user_comment = medatada.get("comments_user_comment")
         comments_auto_comment = medatada.get("comments_auto_comment")
@@ -138,6 +139,7 @@ class ExifTool:
                 exposure_aperture,
                 exposure_shutter_speed,
                 exposure_iso,
+                exposure_flash,
                 comments_user_comment,
                 comments_auto_comment,
                 other_resolution,
@@ -282,6 +284,11 @@ class ExifTool:
                 raise ValueError("Invalid Shutter speed value")
             _, ss_fraction = parse_shutter_speed(exposure_shutter_speed)
             args.append(f"-EXIF:ExposureTime={ss_fraction}")
+
+        if exposure_flash:
+            if exposure_flash not in FLASH_VALUES:
+                raise ValueError("Invalid flash value")
+            args.append(f"-EXIF:Flash={exposure_flash}")
 
         if other_resolution:
             if not resolution_valid(other_resolution):

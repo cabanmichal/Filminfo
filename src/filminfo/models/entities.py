@@ -258,6 +258,36 @@ COUNTRIES = [
     ("Zimbabwe", "ZW", "ZWE"),
 ]
 
+FLASH_VALUES = {
+    "No Flash": 0x0,
+    "Fired": 0x1,
+    "Fired, Return not detected": 0x5,
+    "Fired, Return detected": 0x7,
+    "On, Did not fire": 0x8,
+    "On, Fired": 0x9,
+    "On, Return not detected": 0xD,
+    "On, Return detected": 0xF,
+    "Off, Did not fire": 0x10,
+    "Off, Did not fire, Return not detected": 0x14,
+    "Auto, Did not fire": 0x18,
+    "Auto, Fired": 0x19,
+    "Auto, Fired, Return not detected": 0x1D,
+    "Auto, Fired, Return detected": 0x1F,
+    "No flash function": 0x20,
+    "Off, No flash function": 0x30,
+    "Fired, Red-eye reduction": 0x41,
+    "Fired, Red-eye reduction, Return not detected": 0x45,
+    "Fired, Red-eye reduction, Return detected": 0x47,
+    "On, Red-eye reduction": 0x49,
+    "On, Red-eye reduction, Return not detected": 0x4D,
+    "On, Red-eye reduction, Return detected": 0x4F,
+    "Off, Red-eye reduction": 0x50,
+    "Auto, Did not fire, Red-eye reduction": 0x58,
+    "Auto, Fired, Red-eye reduction": 0x59,
+    "Auto, Fired, Red-eye reduction, Return not detected": 0x5D,
+    "Auto, Fired, Red-eye reduction, Return detected": 0x5F,
+}
+
 
 class Serializable(Protocol):
     def to_dict(self) -> dict[str, Any]: ...

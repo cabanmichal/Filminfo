@@ -98,6 +98,7 @@ class RemoveMetadaForm(ttk.Frame):
             f"/{app_name}/Exposure/Aperture/EXIF:FNumber",
             f"/{app_name}/Exposure/Shutter speed/EXIF:ExposureTime",
             f"/{app_name}/Exposure/ISO/EXIF:ISO",
+            f"/{app_name}/Exposure/Flash/EXIF:Flash",
             f"/{app_name}/Comments/Description/EXIF:ImageDescription",
             f"/{app_name}/Comments/Description/IPTC:Caption-Abstract",
             f"/{app_name}/Comments/Comment/EXIF:UserComment",
