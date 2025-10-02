@@ -5,9 +5,10 @@ import tkinter as tk
 from collections.abc import Callable, Sequence
 from tkinter import messagebox, ttk
 
-from filminfo.app.form_add import AddMetadataForm as FormAdd
-from filminfo.app.form_remove import RemoveMetadaForm as FormRemove
 from filminfo.app.gallery import Gallery
+from filminfo.app.metadata_add import AddMetadataForm as FormAdd
+from filminfo.app.metadata_export_import import Choice, MetadaExportImport
+from filminfo.app.metadata_remove import RemoveMetadaForm as FormRemove
 from filminfo.app.metadata_view import MetadataView
 from filminfo.app.notebook import ShiftScrollNotebook
 from filminfo.app.types import AnyWidget
@@ -49,6 +50,7 @@ class App(ttk.Frame):
         self._form_add_metadata = FormAdd(self._notebook, database_controller)
         self._form_remove_metadata = FormRemove(self._notebook)
         self._metadata_view = MetadataView(self._notebook)
+        self._metadata_export_import = MetadaExportImport(self._notebook)
         self._separator = ttk.Separator(self)
         self._button_open_dir = ttk.Button(
             self, text="Application folder", command=self._on_folder_open
@@ -77,6 +79,7 @@ class App(ttk.Frame):
         self._notebook.add(self._form_add_metadata, text="Add metadata")
         self._notebook.add(self._form_remove_metadata, text="Remove metadata")
         self._notebook.add(self._metadata_view, text="View metadata")
+        self._notebook.add(self._metadata_export_import, text="Export/Import metadata")
         self._notebook.bind("<<NotebookTabChanged>>", self._on_tab_change)
 
     def _add_metadata(self) -> None:
@@ -124,6 +127,63 @@ class App(ttk.Frame):
         if not error:
             self._metadata_view.display_metadata(data)
 
+    def _export_metadata(self) -> None:
+        filepath = self._metadata_export_import.path
+
+        if not filepath:
+            messagebox.showerror("Error", "No JSON file provided for medata export")
+            return
+
+        images = self.selected_images
+
+        if not messagebox.askyesno(
+            "Confirm",
+            (
+                "Are you sure you want export metadata from "
+                f"{len(images)} selected images?"
+            ),
+        ):
+            return None
+
+        error, _ = self._call_exiftool(
+            lambda: self._exiftool_controller.export_metadata(
+                images=images, output_file=filepath
+            )
+        )
+
+        if not error:
+            messagebox.showinfo("Info", f"Metadata exported to {filepath}")
+
+    def _import_metadata(self) -> None:
+        filepath = self._metadata_export_import.path
+
+        if not filepath:
+            messagebox.showerror("Error", "No JSON file provided for medata import")
+            return
+
+        images = self.selected_images
+
+        if not messagebox.askyesno(
+            "Confirm",
+            (
+                "Are you sure you want import metadata to "
+                f"{len(images)} selected images?"
+            ),
+        ):
+            return None
+
+        self._call_exiftool(
+            lambda: self._exiftool_controller.import_metadata(
+                images=images, input_file=filepath
+            ),
+        )
+
+    def _import_export_callback(self) -> None:
+        if self._metadata_export_import.choice == Choice.EXPORT:
+            self._export_metadata()
+        else:
+            self._import_metadata()
+
     def _call_exiftool(
         self, action: Callable[[], ExifToolReply], showmessage: bool = True
     ) -> ExifToolReply:
@@ -163,9 +223,11 @@ class App(ttk.Frame):
             callback = self._add_metadata
         elif tab_index == 1:
             callback = self._remove_metadata
-        else:
+        elif tab_index == 2:
             callback = self._display_metadata
             self._button_execute.focus_set()
+        else:
+            callback = self._import_export_callback
 
         self._button_execute.configure(command=callback)
 

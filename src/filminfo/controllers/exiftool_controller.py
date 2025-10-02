@@ -20,3 +20,11 @@ class ExifToolController:
 
     def get_metadata(self, images: Sequence[str]) -> ExifToolReply:
         return self._exiftool.get_metadata(images)
+
+    def export_metadata(
+        self, images: Sequence[str], output_file: Path
+    ) -> ExifToolReply:
+        return self._exiftool.export_metadata(images, output_file)
+
+    def import_metadata(self, images: Sequence[str], input_file: Path) -> ExifToolReply:
+        return self._exiftool.import_metadata(images, input_file)

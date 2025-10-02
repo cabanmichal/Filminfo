@@ -1,5 +1,6 @@
 import subprocess
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
+from dataclasses import dataclass
 from pathlib import Path
 
 from filminfo.models.convertes import (
@@ -22,6 +23,14 @@ from filminfo.models.validators import (
 
 
 ExifToolReply = tuple[Exception | None, str]
+
+
+@dataclass
+class RunResult:
+    returncode: int
+    stdout: str
+    stderr: str
+    info: str
 
 
 class ExifTool:
@@ -52,6 +61,24 @@ class ExifTool:
             return None, result
         except Exception as err:
             return err, "Metadata retrieval not successful"
+
+    def export_metadata(
+        self, images: Sequence[str], output_file: Path
+    ) -> ExifToolReply:
+        try:
+            result = self._export_metadata(images)
+            with open(output_file, "w", encoding="utf-8") as ofh:
+                ofh.write(result.stdout)
+            return None, result.info
+        except Exception as err:
+            return err, "Metadata export not successful"
+
+    def import_metadata(self, images: Sequence[str], input_file: Path) -> ExifToolReply:
+        try:
+            result = self._import_metadata(images, input_file)
+            return None, result
+        except Exception as err:
+            return err, "Metadata import not successful"
 
     def _add_metadata(self, images: Sequence[str], medatada: dict[str, str]) -> str:
         if not images:
@@ -122,7 +149,6 @@ class ExifTool:
         args = [
             self._binary,
             "-overwrite_original",
-            "-charset utf8",
             "-iptc:CodedCharacterSet=UTF8",
         ]
 
@@ -148,15 +174,16 @@ class ExifTool:
             args.append(f"-IPTC:TimeCreated={iptc_time}")
 
         if origin_country:
-            country, code = self._get_country_code(origin_country)
+            country, code2, code3 = self._get_country_code(origin_country)
             args.append(f"-IPTC:Country-PrimaryLocationName={country}")
             args.append(f"-XMP-photoshop:Country={country}")
             args.append(f"-XMP-iptcExt:LocationShownCountryName={country}")
 
-            if code:
-                args.append(f"-IPTC:Country-PrimaryLocationCode={code}")
-                args.append(f"-XMP-iptcCore:CountryCode={code}")
-                args.append(f"-XMP-iptcExt:LocationCreatedCountryCode={code}")
+            if code3:
+                args.append(f"-IPTC:Country-PrimaryLocationCode={code3}")
+            if code2:
+                args.append(f"-XMP-iptcCore:CountryCode={code2}")
+                args.append(f"-XMP-iptcExt:LocationCreatedCountryCode={code2}")
 
         if origin_gps_latitude:
             if not latitude_valid(origin_gps_latitude):
@@ -271,11 +298,14 @@ class ExifTool:
 
         args.extend(images)
 
-        return self._run_exiftool(args)
+        return self._run_exiftool(args, _parse_result_standard).info
 
     def _remove_metadata(self, images: Sequence[str], tags: Sequence[str]) -> str:
         if not images:
             raise ValueError("No files provided for metadata removal.")
+
+        if not tags:
+            raise ValueError("No metadata tags specified for removal.")
 
         args = [
             self._binary,
@@ -287,7 +317,7 @@ class ExifTool:
 
         args.extend(images)
 
-        return self._run_exiftool(args)
+        return self._run_exiftool(args, _parse_result_standard).info
 
     def _get_metadata(self, images: Sequence[str]) -> str:
         if not images:
@@ -301,25 +331,97 @@ class ExifTool:
             "structformat=jsonq",
             "-a",
             "-s",
+            "-q",
         ]
-
         args.extend(images)
 
-        return self._run_exiftool(args)
+        return self._run_exiftool(args, _parse_result_standard).stdout
 
-    def _run_exiftool(self, arguments: Sequence[str]) -> str:
+    def _export_metadata(self, images: Sequence[str]) -> RunResult:
+        if not images:
+            raise ValueError("No files provided for metadata export.")
+
+        args = [
+            self._binary,
+            "-G",
+            "-json",
+            "-api",
+            "structformat=jsonq",
+            "--icc_profile:all",
+        ]
+        args.extend(images)
+
+        return self._run_exiftool(args, _parse_result_export)
+
+    def _import_metadata(self, images: Sequence[str], input_file: Path) -> str:
+        if not images:
+            raise ValueError("No files provided for metadata import.")
+
+        args = [
+            self._binary,
+            "-overwrite_original",
+            f"-json={str(input_file)}",
+        ]
+        args.extend(images)
+
+        return self._run_exiftool(args, _parse_result_import).info
+
+    def _run_exiftool(
+        self,
+        arguments: Sequence[str],
+        response_parser: Callable[[subprocess.CompletedProcess[str]], RunResult],
+    ) -> RunResult:
         try:
-            result = subprocess.run(arguments, capture_output=True, text=True)
+            result = response_parser(
+                subprocess.run(arguments, capture_output=True, text=True)
+            )
             if result.returncode != 0:
-                raise RuntimeError(f"ExifTool error: {result.stderr.strip()}")
+                raise RuntimeError(f"ExifTool error: {result.stderr}")
         except FileNotFoundError:
             raise RuntimeError(f"ExifTool not found: {self._binary}")
 
-        return result.stdout.strip()
+        return result
 
-    def _get_country_code(self, country: str) -> tuple[str, str]:
-        for name, code in COUNTRIES:
+    def _get_country_code(self, country: str) -> tuple[str, str, str]:
+        for name, code2, code3 in COUNTRIES:
             if name == country:
-                return name, code
+                return name, code2, code3
 
-        return country, ""
+        return country, "", ""
+
+
+def _parse_result_standard(result: subprocess.CompletedProcess[str]) -> RunResult:
+    return RunResult(
+        result.returncode,
+        result.stdout.strip(),
+        result.stderr.strip(),
+        result.stdout.strip(),
+    )
+
+
+def _parse_result_export(result: subprocess.CompletedProcess[str]) -> RunResult:
+    return RunResult(
+        result.returncode,
+        result.stdout.strip(),
+        result.stderr.strip(),
+        result.stderr.strip(),
+    )
+
+
+def _parse_result_import(result: subprocess.CompletedProcess[str]) -> RunResult:
+    if result.returncode != 0:
+        return RunResult(
+            result.returncode,
+            result.stdout.strip(),
+            result.stderr.strip(),
+            result.stdout.strip(),
+        )
+
+    stderr = [
+        part for part in [part.strip() for part in result.stderr.split("\n")] if part
+    ]
+    if len(stderr) > 1:
+        return RunResult(1, "", result.stderr.strip(), "")
+    else:
+        info = stderr[-1] if stderr else ""
+        return RunResult(result.returncode, info, "", info)

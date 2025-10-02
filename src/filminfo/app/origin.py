@@ -45,7 +45,7 @@ class OriginWidget(ttk.LabelFrame):
         self._combo_country = ShiftScrollCombobox(
             self,
             textvariable=self._country_var,
-            values=[country for country, _ in COUNTRIES],
+            values=[country for country, *_ in COUNTRIES],
         )
         self._button_country = ttk.Button(
             self,
@@ -109,7 +109,7 @@ class OriginWidget(ttk.LabelFrame):
 
     def _get_default_country(self) -> str:
         if (country := get_string_option("country")) and country in [
-            country for country, _ in COUNTRIES
+            country for country, *_ in COUNTRIES
         ]:
             return str(country)
 
