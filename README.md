@@ -52,6 +52,8 @@ Simple gui to add basic metadata to film scans.
 
 ### Export/Import metadata
 
+<img width="600" alt="Export/import metadata view" src="https://github.com/cabanmichal/Filminfo/raw/main/docs/images/06_export_import_metadata.webp" />
+
 -   Some (predefined) tags can be exported to a json file.
 -   This json file can be used to re-import the tags back.
 -   Import only works when the images are in the same folder as the json. Doesn't work with subfolders.
