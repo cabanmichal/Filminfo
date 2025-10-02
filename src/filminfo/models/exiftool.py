@@ -1,4 +1,7 @@
+import json
+import os
 import subprocess
+import tempfile
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -67,8 +70,14 @@ class ExifTool:
     ) -> ExifToolReply:
         try:
             result = self._export_metadata(images)
+            metadata = json.loads(result.stdout)
+            for obj in metadata:
+                source_file = Path(obj["SourceFile"])
+                obj["SourceFile"] = source_file.name
+
             with open(output_file, "w", encoding="utf-8") as ofh:
-                ofh.write(result.stdout)
+                json.dump(metadata, ofh, indent=4, ensure_ascii=False)
+
             return None, result.info
         except Exception as err:
             return err, "Metadata export not successful"
@@ -346,14 +355,61 @@ class ExifTool:
         if not images:
             raise ValueError("No files provided for metadata export.")
 
+        tags_to_export = [
+            "-EXIF:Artist",
+            "-EXIF:CameraSerialNumber",
+            "-EXIF:Copyright",
+            "-EXIF:DateTimeOriginal",
+            "-EXIF:ExposureTime",
+            "-EXIF:FNumber",
+            "-EXIF:Flash",
+            "-EXIF:FocalLength",
+            "-EXIF:FocalLengthIn35mmFormat",
+            "-EXIF:GPSLatitude",
+            "-EXIF:GPSLatitudeRef",
+            "-EXIF:GPSLongitude",
+            "-EXIF:GPSLongitudeRef",
+            "-EXIF:ISO",
+            "-EXIF:ImageDescription",
+            "-EXIF:LensMake",
+            "-EXIF:LensModel",
+            "-EXIF:LensSerialNumber",
+            "-EXIF:Make",
+            "-EXIF:Model",
+            "-EXIF:UserComment",
+            "-IPTC:By-line",
+            "-IPTC:Caption-Abstract",
+            "-IPTC:City",
+            "-IPTC:CopyrightNotice",
+            "-IPTC:Country-PrimaryLocationCode",
+            "-IPTC:Country-PrimaryLocationName",
+            "-IPTC:DateCreated",
+            "-IPTC:Sub-location",
+            "-IPTC:TimeCreated",
+            "-XMP-dc:Creator",
+            "-XMP-dc:Description",
+            "-XMP-dc:Rights",
+            "-XMP-iptcCore:CountryCode",
+            "-XMP-iptcCore:Location",
+            "-XMP-iptcExt:LocationCreatedCountryCode",
+            "-XMP-iptcExt:LocationShownCity",
+            "-XMP-iptcExt:LocationShownCountryName",
+            "-XMP-iptcExt:LocationShownSublocation",
+            "-XMP-photoshop:City",
+            "-XMP-photoshop:Country",
+            "-XMP-photoshop:DateCreated",
+            "-XMP-xmpRights",
+        ]
+
         args = [
             self._binary,
             "-G",
             "-json",
             "-api",
             "structformat=jsonq",
-            "--icc_profile:all",
+            "-n",
         ]
+        args.extend(tags_to_export)
         args.extend(images)
 
         return self._run_exiftool(args, _parse_result_export)
@@ -362,13 +418,19 @@ class ExifTool:
         if not images:
             raise ValueError("No files provided for metadata import.")
 
+        import_json = _create_import_json(input_file)
         args = [
             self._binary,
-            f"-json={str(input_file)}",
+            "-n",
+            f"-json={import_json}",
         ]
         args.extend(images)
 
-        return self._run_exiftool(args, _parse_result_import).info
+        try:
+            return self._run_exiftool(args, _parse_result_import).info
+        finally:
+            print(import_json)
+            os.unlink(import_json)
 
     def _run_exiftool(
         self,
@@ -429,3 +491,18 @@ def _parse_result_import(result: subprocess.CompletedProcess[str]) -> RunResult:
     else:
         info = stderr[-1] if stderr else ""
         return RunResult(result.returncode, info, "", info)
+
+
+def _create_import_json(original: Path) -> str:
+    with open(original, "r", encoding="utf-8") as ifh:
+        data = json.load(ifh)
+
+    dir = original.parent
+    for image_data in data:
+        image_name = Path(image_data["SourceFile"])
+        image_data["SourceFile"] = str(dir / image_name)
+
+    with tempfile.NamedTemporaryFile(mode="w+", suffix=".json", delete=False) as tmp:
+        json.dump(data, tmp, ensure_ascii=False, indent=4)
+
+    return tmp.name

@@ -4,6 +4,7 @@ Simple gui to add basic metadata to film scans.
 
 -   You can store Film, Camera and Lens information and later reuse them.
 -   Also allows to view and remove metadata from images.
+-   Very basic support to export and re-import metadata.
 -   Tested only on macOS (might work elsewhere).
 -   Very few dependencies.
 -   It uses [ExifTool](https://exiftool.org) to do the real work. It must be installed separately.
@@ -48,6 +49,12 @@ Simple gui to add basic metadata to film scans.
 
 -   In the separate window metadata can be filtered using regular expression.
 -   Double-click copies cell value to clipboard.
+
+### Export/Import metadata
+
+-   Some (predefined) tags can be exported to a json file.
+-   This json file can be used to re-import the tags back.
+-   Import only works when the images are in the same folder as the json. Doesn't work with subfolders.
 
 ## Installation
 

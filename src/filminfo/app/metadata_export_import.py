@@ -38,7 +38,10 @@ class MetadaExportImport(ttk.Frame):
 
         if self._choice_var.get() == Choice.EXPORT.value:
             filepath = filedialog.asksaveasfilename(
-                title=title, defaultextension=defaultextension, filetypes=filetypes
+                title=title,
+                defaultextension=defaultextension,
+                filetypes=filetypes,
+                initialfile="metadata.json",
             )
         else:
             filepath = filedialog.askopenfilename(
