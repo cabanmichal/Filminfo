@@ -41,7 +41,7 @@ Simple gui to add basic metadata to film scans.
 <img width="600" alt="View metadata view" src="https://github.com/cabanmichal/Filminfo/raw/main/docs/images/04_view_metadata.webp" />
 
 -   Pressing the `[Execute]` button metadata of the selected images are loaded.
--   The metadata can be viewed in a separate window (press `[To new window]`).
+-   The metadata can be viewed in a separate window (press `[New window]`).
 
 ### Filter metadata
 
