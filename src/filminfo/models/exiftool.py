@@ -150,7 +150,6 @@ class ExifTool:
 
         args = [
             self._binary,
-            "-overwrite_original",
             "-iptc:CodedCharacterSet=UTF8",
         ]
 
@@ -316,7 +315,6 @@ class ExifTool:
 
         args = [
             self._binary,
-            "-overwrite_original",
         ]
 
         for tag in tags:
@@ -366,7 +364,6 @@ class ExifTool:
 
         args = [
             self._binary,
-            "-overwrite_original",
             f"-json={str(input_file)}",
         ]
         args.extend(images)
