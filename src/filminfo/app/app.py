@@ -76,10 +76,10 @@ class App(ttk.Frame):
         self.rowconfigure(0, weight=1)
 
     def __configure(self) -> None:
-        self._notebook.add(self._form_add_metadata, text="Add metadata")
-        self._notebook.add(self._form_remove_metadata, text="Remove metadata")
-        self._notebook.add(self._metadata_view, text="View metadata")
-        self._notebook.add(self._metadata_export_import, text="Export/Import metadata")
+        self._notebook.add(self._form_add_metadata, text="Add")
+        self._notebook.add(self._form_remove_metadata, text="Remove")
+        self._notebook.add(self._metadata_view, text="View")
+        self._notebook.add(self._metadata_export_import, text="Export/Import")
         self._notebook.bind("<<NotebookTabChanged>>", self._on_tab_change)
 
     def _add_metadata(self) -> None:

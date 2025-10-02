@@ -41,7 +41,7 @@ class MetadataView(ttk.Frame):
 
         self._label_filter = ttk.Label(self, text="Filter by regex:")
         self._pattern_var = tk.StringVar()
-        self._entry_filter = ttk.Entry(self, textvariable=self._pattern_var)
+        self._entry_filter = ttk.Entry(self, textvariable=self._pattern_var, width=12)
         self._button_filter_apply = ttk.Button(
             self, text="Apply", command=self._on_filter_apply
         )
@@ -49,9 +49,7 @@ class MetadataView(ttk.Frame):
             self, text="Clear", command=self._on_filter_clear
         )
 
-        self._button_clone = ttk.Button(
-            self, text="To new window", command=self._on_clone
-        )
+        self._button_clone = ttk.Button(self, text="New window", command=self._on_clone)
 
         self._layout()
         self.__configure()
@@ -73,6 +71,7 @@ class MetadataView(ttk.Frame):
             self._label_data,
             self._button_expand,
             self._button_collapse,
+            self._entry_filter,
             self._button_clone,
             self._scrollable,
         ]:
