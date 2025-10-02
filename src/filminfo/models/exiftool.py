@@ -398,7 +398,7 @@ class ExifTool:
             "-XMP-photoshop:City",
             "-XMP-photoshop:Country",
             "-XMP-photoshop:DateCreated",
-            "-XMP-xmpRights",
+            "-XMP-xmpRights:Marked",
         ]
 
         args = [
