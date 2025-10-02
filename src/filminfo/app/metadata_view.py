@@ -60,6 +60,7 @@ class MetadataView(ttk.Frame):
         self._label_data.grid(row=0, column=0, sticky="w")
         self._button_expand.grid(row=1, column=0, sticky="w")
         self._button_collapse.grid(row=1, column=1, sticky="w")
+        self._entry_filter.grid(row=1, column=3, sticky="ew")
         self._button_clone.grid(row=1, column=6, sticky="e")
 
         self._scrollable.grid(row=2, column=0, sticky="nsew", columnspan=7)
@@ -145,7 +146,6 @@ class MetadataView(ttk.Frame):
         )
         frame._button_clone.grid_remove()
         frame._label_filter.grid(row=1, column=2, sticky="e")
-        frame._entry_filter.grid(row=1, column=3, sticky="ew")
         frame._button_filter_apply.grid(row=1, column=4, sticky="w")
         frame._button_filter_clear.grid(row=1, column=5, sticky="w")
 
