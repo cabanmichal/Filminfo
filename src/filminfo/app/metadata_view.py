@@ -102,7 +102,7 @@ class MetadataView(ttk.Frame):
         self._tree.heading("#0", text="Filename")
         self._tree.heading("group", text="Group")
         self._tree.heading("tag", text="Tag name")
-        self._tree.heading("value", text="Value")
+        self._tree.heading("value", text="Value", anchor="w")
         self._tree.column("#0", width=260, stretch=False)
         self._tree.column("group", width=100, stretch=False)
         self._tree.column("tag", width=200, stretch=False)
